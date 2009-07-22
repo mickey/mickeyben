@@ -7,7 +7,7 @@ h1. {{ page.title }}
 
 p(meta). 22 July 2009
 
-I just came back from "railscamp":http://railscamps.com New England edition.  It was one of the best programming events I have been to.  It was a mix of a hackfest, tech talks, binge drinking, and LAN parties.  One of the things that made it great was that there was no internet.  It was in the middle of the woods up in Maine, fortunately "qrush":twitter.com/qrush brought a copy of all the rubyforge gems so we were able to continue hacking away on our project.  
+I just came back from "railscamp":http://railscamps.com New England edition.  It was one of the best programming events I have been to.  It was a mix of a hackfest, tech talks, binge drinking, and LAN parties.  One of the things that made it great was that there was no internet.  It was in the middle of the woods up in Maine, fortunately "qrush":http://twitter.com/qrush brought a copy of all the rubyforge gems so we were able to continue hacking away on our projects.  
 
 !http://farm3.static.flickr.com/2469/3747477610_bd8e85418a_d.jpg!
 
