@@ -14,11 +14,13 @@ header = <<-END
 layout: post
 title: "#{ARGV[0]}"
 ---
- 
+
 h1. {{ page.title }}
- 
+
+p(meta). #{Time.now.strftime("%d %B %Y")}
+
 END
- 
+
 File.open(post, 'w') do |f|
   f << header
 end
