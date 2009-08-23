@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+  <channel>
+    <title>Sparkle Sample</title>
+    <link>http://jtoy.net/ivoice/appcast.xml</link>
+    <description>AppCast for </description>
+    <generator>Feeder 1.5.3(378) http://reinventedsoftware.com/feeder/</generator>
+    <docs>http://blogs.law.harvard.edu/tech/rss</docs>
+    <language>en</language>
+    <pubDate>Fri, 30 May 2008 11:35:15 +0900</pubDate>
+    <lastBuildDate>Fri, 30 May 2008 11:35:15 +0900</lastBuildDate>
+    <atom:link href="hhttp://jtoy.net/ivoice/appcast.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>Version 2.0 (No useful changes, upgrade for $100)</title>
+      <pubDate>Sun, 01 Jun 2008 11:24:54 +0900</pubDate>
+      <enclosure url="http://foolsworkshop.com/downloads/RubyCocoa Sparkle Tutorial_2.0.zip" length="561575" type="application/octet-stream" sparkle:version="2.0"/>
+      <guid isPermaLink="false">version-20-no-useful-changes-upgrade-for-$100</guid>
+      <sparkle:releaseNotesLink>http://foolsworkshop.com/downloads/sparklesample.html</sparkle:releaseNotesLink>
+    </item>
+  </channel>
+</rss>
