@@ -1,1 +1,0 @@
-jekyll && rsync -avz --delete _site/ sanbit:public_html
