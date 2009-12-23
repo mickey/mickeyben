@@ -14,8 +14,8 @@ task :deploy do
 cd ~/tmp/mickeyben
 git pull
 rm -rf _site
-jekyll --pygments --no-auto
-mv _site/* ~/www/
+jekyll
+cp -rf _site/* ~/www/
 EOF
     commands = commands.gsub(/\n/, "; ")
     ssh.exec commands

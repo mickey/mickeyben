@@ -1,0 +1,6 @@
+destination: ./_site
+auto:        false
+lsi:         false
+pygments:    true
+markdown:    textile
+permalink:   date
