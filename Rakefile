@@ -14,7 +14,7 @@ task :deploy do
 cd ~/tmp/mickeyben
 git pull
 rm -rf _site
-jekyll --no-auto
+jekyll --pygments --no-auto
 mv _site/* ~/www/
 EOF
     commands = commands.gsub(/\n/, "; ")
