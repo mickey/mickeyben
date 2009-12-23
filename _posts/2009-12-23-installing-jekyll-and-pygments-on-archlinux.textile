@@ -1,0 +1,54 @@
+---
+layout: post
+title: "Installing Jekyll and Pygments on ArchLinux"
+---
+
+h1. {{ page.title }}
+
+p(meta). 23 December 2009
+
+"Jekyll":http://github.com/mojombo/jekyll is a simple, blog aware, static site generator. I use it for this blog and the cool part about it is that is very simple and easy to use and there's already plenty of "websites":http://wiki.github.com/mojombo/jekyll/sites using it. 
+I forked "jtoy.net":http://wiki.github.com/mojombo/jekyll/sites and was ready to blog in about half an hour. 
+
+I didn't use ruby1.9 but 1.8.7 because of some "issues":http://github.com/mojombo/jekyll/issues/#issue/108 with pygments.
+
+First if you don't have ruby, let's install it. 
+Remove the "ruby" package, so that it doesn't mess up, and retrieve and build the packages with any way you're comfortable with, 
+
+{% highlight bash %}
+pacman -R ruby
+yaourt -S ruby1.8
+yaourt -S rubygems1.8
+
+# ruby1.8 installs ruby-1.8 executable. link it to "ruby":
+cd /usr/bin
+ln ruby-1.8 ruby -s
+{% endhighlight %}
+
+If you need syntax highlighting, you need python and pygments : 
+
+{% highlight bash %}
+pacman -S python
+{% endhighlight %}
+
+download the last version of easy_install (ruby gems equivalent for python) and install pygments :
+
+{% highlight bash %}
+wget http://pypi.python.org/packages/2.6/s/setuptools/setuptools-0.6c11-py2.6.egg
+sudo sh setuptools-0.6c11-py2.6.eg
+easy_install Pygments
+{% endhighlight %}
+
+Install Jekyll :
+
+{% highlight bash %}
+sudo gem install jekyll
+{% endhighlight %}
+
+Finally, this is how I run Jekyll:
+
+{% highlight bash %}
+jekyll --pygments
+{% endhighlight %}
+
+To preview the website you can specify the option __--server__
