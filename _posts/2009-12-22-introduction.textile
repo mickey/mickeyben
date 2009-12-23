@@ -1,0 +1,13 @@
+---
+layout: post
+title: "Introduction"
+---
+
+h1. {{ page.title }}
+
+p(meta). 22 December 2009
+
+I always wanted to create a technical blog, but never took the time to do it. 
+Recently, I wanted to play with "Jekyll":http://wiki.github.com/mojombo/jekyll, a simple static site generator and just bought a VPS instance on "linode":http://linode.com. So I made the jump and create this blog from a github "fork":http://github.com/jtoy/jtoyblog.
+
+I'm mainly doing some ruby stuff but buying this server was a way to hack a bit with archlinux and learn some basic sysadmin. I hope some of you will find something interesting here, otherwise you can just make fun of my English.

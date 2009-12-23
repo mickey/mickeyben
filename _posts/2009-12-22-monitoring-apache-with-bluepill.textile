@@ -1,0 +1,88 @@
+---
+layout: post
+title: "Monitoring Apache with Bluepill"
+---
+
+h1. {{ page.title }}
+
+p(meta). 22 December 2009
+
+I always used "god":http://god.rubyforge.org/ to monitor my processes. god is working fine, has a lot of features and is very easy to use, but has some serious "memory":http://groups.google.com/group/god-rb/browse_thread/thread/1cca2b7c4a581c2/69f69f602add7636?lnk=gst&q=memory+leak#69f69f602add7636 leaks. To handle this problem I usually set-up a cron to restart god every day.
+
+Recently I read an "article":http://asemanfar.com/Why-We-Wrote-Bluepill about a new process monitoring tool called "bluepill":http://github.com/arya/bluepill based on EventMachine. The DSL looks simple and comes memory-leaks-less.
+
+In this article I'll cover how to install it and monitor apache.
+
+First let's grab it :
+
+{% highlight bash %}
+sudo gem install bluepill
+{% endhighlight %}
+
+Next, we need to configure the syslogger to log the local6 facility used by bluepill.
+
+If your syslogger is syslog, add a line to __/etc/syslog.conf__ :
+
+{% highlight bash %}
+local6.*          /var/log/bluepill.log
+{% endhighlight %}
+
+If it's syslog-ng, add ths to __/etc/syslog-ng.conf__ :
+
+{% highlight bash %}
+filter f_local6 { facility(local6); };
+destination d_local6 { file("/var/log/bluepill.log"); };
+
+log { source(src); filter(f_local6); destination(d_local6); };
+{% endhighlight %}
+
+You'll also want to add __/var/log/bluepill.log__ to __/etc/logrotate.d/syslog__ so that it gets rotated.
+
+Next restart your syslogger, for syslog-ng :
+
+{% highlight bash %}
+sudo /etc/rc.d/syslog-ng restart
+{% endhighlight %}
+
+And finally create the __/var/bluepill__ directory for bluepill to store its pid and sock files.
+
+Finally let's create our bluepill script to monitor apache in __apache-monitor.pill__ :
+
+{% highlight ruby %}
+Bluepill.application("httpd") do |app|
+	app.process("httpd") do |process|
+		process.pid_file = "/var/run/httpd/httpd.pid"
+		process.start_command = "apachectl start"
+		process.stop_command = "apachectl stop"
+		process.restart_command = "apachectl restart"
+		process.start_grace_time = 10.seconds
+		process.stop_grace_time = 10.seconds
+		process.restart_grace_time = 10.seconds
+	end
+end
+{% endhighlight %}
+
+This simple script just checks if apache is up and if not reboot it.
+You can try it by :
+
+{% highlight bash %}
+sudo bluepill load apache-monitor.pill
+{% endhighlight %}
+
+You can try to kill your httpd processes and you'll see the magic happens, bluepill will restart them.
+
+Bluepill comes with some great features to monitor your memory and cpu, so you can add to your script :
+
+{% highlight ruby %}
+process.checks :cpu_usage, :every => 10.seconds, :below => 5, :times => 3
+process.checks :mem_usage, :every => 10.seconds, :below => 100.megabytes, :times => [3,5]
+{% endhighlight %}
+
+The first line checks every 10 seconds to make sure the cpu usage of this process is below 5 percent; 3 failed checks results in a restart. 
+The second line checks every 10 seconds to make sure memory usage is below 100MB; 3 out of 5 failed attempts results in a restart.
+
+If you want your bluepill daemon to run at boot, just add a line to __/etc/rc.local__ :
+
+{% highlight bash %}
+sudo bluepill load /full/path/to/your/script/apache-monitor.pill
+{% endhighlight %}
