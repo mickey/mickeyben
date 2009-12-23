@@ -2,5 +2,5 @@ destination: ./_site
 auto:        false
 lsi:         false
 pygments:    true
-markdown:    textile
+markdown:    maruku
 permalink:   date
