@@ -8,7 +8,7 @@ h1. {{ page.title }}
 p(meta). 23 December 2009
 
 "Jekyll":http://github.com/mojombo/jekyll is a simple, blog aware, static site generator. I use it for this blog and the cool part about it is that is very simple and easy to use and there's already plenty of "websites":http://wiki.github.com/mojombo/jekyll/sites using it. 
-I forked "jtoy.net":http://wiki.github.com/mojombo/jekyll/sites and was ready to blog in about an hour. 
+I forked "jtoy.net":http://github.com/jtoy/jtoyblog/ and was ready to blog in about an hour. 
 
 I didn't use ruby1.9 but 1.8.7 because of some "issues":http://github.com/mojombo/jekyll/issues/#issue/108 with pygments.
 
