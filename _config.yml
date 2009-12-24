@@ -1,6 +1,6 @@
 destination: ./_site
 auto:        true
-lsi:         true
+lsi:         false
 pygments:    true
 markdown:    maruku
 permalink:   date
