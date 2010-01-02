@@ -1,0 +1,46 @@
+---
+layout: post
+title: "Mac OSX tricks 1 : cannot empty your trash ? use lsof"
+---
+
+h1. {{ page.title }}
+
+p(meta). 01 January 2010
+
+So you want to empty you Trash but you have this below message saying that the file is already in use.
+
+!/images/Trash.png!
+
+You click __continue__ but the file isn't deleted.
+
+In this case, the problem is that the file is a dmg and is mounted.
+You just have to unmount the image to be able to delete it permanently.
+
+But in some cases you don't really know what's the process currently using your file(s).
+
+Here's come *lsof* !
+If you open the lsof man, you'll read : __lsof - list open files__
+So if you just type lsof without any arguments, it lists all open files by all processes.
+
+lsof also take one or several files in argument so it can list all the processes using this file(s).
+
+{% highlight bash %}
+$ lsof .Trash/Spotify.dmg
+COMMAND    PID USER   FD   TYPE DEVICE SIZE/OFF   NODE NAME
+diskimage 1842 mike    3r   REG   14,2  3286498 928605 .Trash/Spotify.dmg
+{% endhighlight %}
+
+Here you can identify **diskimage** as the process using our file.
+Now that you know the file is mounted, you can unmount it using the finder or the command line :
+
+{% highlight bash %}
+$ diskutil unmount /Volumes/Spotify
+{% endhighlight %}
+
+Or simply kill the process (in this case it will unmount it) by using the PID nicely given by lsof :
+
+{% highlight bash %}
+$ kill -9 1842
+{% endhighlight %}
+
+You can now empty your Trash.

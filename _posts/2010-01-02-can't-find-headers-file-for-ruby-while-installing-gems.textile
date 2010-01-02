@@ -1,0 +1,29 @@
+---
+layout: post
+title: "\"can't find headers file for ruby\" while installing gems"
+---
+
+h1. {{ page.title }}
+
+p(meta). 02 January 2010
+
+I just reinstall my old MacBook and had a problem I got each time I install a Mac OSX. 
+
+{% highlight bash %}
+$ sudo gem install RedCloth
+Password:
+Building native extensions.  This could take a while...
+ERROR:  Error installing RedCloth:
+	ERROR: Failed to build gem native extension.
+
+/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin/ruby extconf.rb
+can't find header files for ruby.
+
+
+Gem files will remain installed in /Library/Ruby/Gems/1.8/gems/RedCloth-4.2.2 for inspection.
+Results logged to /Library/Ruby/Gems/1.8/gems/RedCloth-4.2.2/ext/redcloth_scan/gem_make.out
+{% endhighlight %}
+
+And the solution is really simple but I always forget it :
+
+Install Xcode "here":http://developer.apple.com/technology/xcode.html.
