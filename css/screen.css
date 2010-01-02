@@ -92,8 +92,9 @@ ul.posts {
   font-size: 110%;
   text-align: justify;
   width: 700px;
-  margin: 3em auto 2em auto;
+  margin: 0px auto 0px auto;
   line-height: 1.5em;
+  overflow: hidden;
 }
 
 .title {
