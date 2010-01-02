@@ -62,7 +62,7 @@ upstream  yoursite  {
 }
 {% endhighlight %}
 
-This configuration will send 75% of the requests to yoursite1.yoursite.com and the other 25% to yoursite2.yoursite.com.
+This configuration will send 80% of the requests to yoursite1.yoursite.com and the other 20% to yoursite2.yoursite.com.
 
 *note:* It's not possible to combine ip_hash and weight directives.
 
