@@ -17,7 +17,7 @@ html, body {
 
 body {
   background-color: white;
-  font: 13.34px helvetica, arial, clean, sans-serif;
+  font: 13.34px georgia,'bitstream vera sans serif','lucida grande',helvetica,verdana,sans-serif;
   *font-size: small;
   text-align: center;
 }
@@ -26,10 +26,20 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 100%;
 }
 
-h1 {
-  margin-bottom: 1em;
+#post h1 {
+  font-size: 42px;
+  line-height:1.43;
 }
-
+#post h2 {
+	font-size: 26px;
+	line-height:1.1;
+	margin:25px 0;
+}
+#post {
+	font-size:20px;
+	line-height:1.5;
+	color: #212122;
+}
 p {
   margin: 1em 0;
 }
@@ -81,7 +91,7 @@ ul.posts {
 .site {
   font-size: 110%;
   text-align: justify;
-  width: 40em;
+  width: 700px;
   margin: 3em auto 2em auto;
   line-height: 1.5em;
 }
