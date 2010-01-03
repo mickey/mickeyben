@@ -16,7 +16,7 @@ In this article I'll cover how to install it and monitor apache.
 First let's grab it :
 
 {% highlight bash %}
-sudo gem install bluepill
+$ sudo gem install bluepill
 {% endhighlight %}
 
 Next, we need to configure the syslogger to log the local6 facility used by bluepill.
@@ -41,7 +41,7 @@ You'll also want to add __/var/log/bluepill.log__ to __/etc/logrotate.d/syslog__
 Next restart your syslogger, for syslog-ng :
 
 {% highlight bash %}
-sudo /etc/rc.d/syslog-ng restart
+$ sudo /etc/rc.d/syslog-ng restart
 {% endhighlight %}
 
 And finally create the __/var/bluepill__ directory for bluepill to store its pid and sock files.
@@ -66,7 +66,7 @@ This simple script just checks if apache is up and if not reboot it.
 You can try it by :
 
 {% highlight bash %}
-sudo bluepill load apache-monitor.pill
+$ sudo bluepill load apache-monitor.pill
 {% endhighlight %}
 
 You can try to kill your httpd processes and you'll see the magic happens, bluepill will restart them.
@@ -84,5 +84,5 @@ The second line checks every 10 seconds to make sure memory usage is below 100MB
 If you want your bluepill daemon to run at boot, just add a line to __/etc/rc.local__ :
 
 {% highlight bash %}
-sudo bluepill load /full/path/to/your/script/apache-monitor.pill
+$ sudo bluepill load /full/path/to/your/script/apache-monitor.pill
 {% endhighlight %}

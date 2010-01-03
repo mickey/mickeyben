@@ -16,50 +16,50 @@ First if you don't have ruby, let's install it.
 Remove the "ruby" package, so that it doesn't mess up, and retrieve and build the packages with any way you're comfortable with, 
 
 {% highlight bash %}
-pacman -R ruby
-yaourt -S ruby1.8
-yaourt -S rubygems1.8
+$ pacman -R ruby
+$ yaourt -S ruby1.8
+$ yaourt -S rubygems1.8
 
 # ruby1.8 installs ruby-1.8 executable. link it to "ruby":
-cd /usr/bin
-ln ruby-1.8 ruby -s
+$ cd /usr/bin
+$ ln ruby-1.8 ruby -s
 {% endhighlight %}
 
 If you need syntax highlighting, you need python and pygments : 
 
 {% highlight bash %}
-pacman -S python
+$ pacman -S python
 {% endhighlight %}
 
 download the last version of easy_install (ruby gems equivalent for python) and install pygments :
 
 {% highlight bash %}
-wget http://pypi.python.org/packages/2.6/s/setuptools/setuptools-0.6c11-py2.6.egg
-sudo sh setuptools-0.6c11-py2.6.eg
-easy_install Pygments
+$ wget http://pypi.python.org/packages/2.6/s/setuptools/setuptools-0.6c11-py2.6.egg
+$ sudo sh setuptools-0.6c11-py2.6.eg
+$ easy_install Pygments
 {% endhighlight %}
 
 Install Jekyll :
 
 {% highlight bash %}
-sudo gem install jekyll
+$ sudo gem install jekyll
 {% endhighlight %}
 
 Next, if you want the "Related posts" feature, you'll need the the Ruby GSL package.
 I first tried to install it via yaourt but it didn't work (conflicts with rubygems), next I try do download the last version (1.10.3) but it didn't work as well ... So I took the last version from the SVN :
 
 {% highlight bash %}
-svn checkout svn://rubyforge.org/var/svn/rb-gsl
-cd rb-gsl/trunk/rb-gsl
-ruby setup.rb config
-ruby setup.rb setup
-sudo ruby setup.rb install
+$ svn checkout svn://rubyforge.org/var/svn/rb-gsl
+$ cd rb-gsl/trunk/rb-gsl
+$ ruby setup.rb config
+$ ruby setup.rb setup
+$ sudo ruby setup.rb install
 {% endhighlight %}
 
 Finally, this is how I run Jekyll:
 
 {% highlight bash %}
-jekyll --pygments --lsi 
+$ jekyll --pygments --lsi 
 {% endhighlight %}
 
 To preview the website you can specify the option __--server__
