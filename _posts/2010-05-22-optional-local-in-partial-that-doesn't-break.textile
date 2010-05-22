@@ -1,0 +1,22 @@
+---
+layout: post
+title: "Optional local in partial that doesn't break"
+---
+
+h1. {{ page.title }}
+
+p(meta). 22 May 2010
+
+If you have a partial called with or without local parameters, example :
+
+{% highlight ruby %}
+= render :partial => 'user/new'
+= render :partial => 'user/new', :locals => { :show_ad => true }
+{% endhighlight %}
+
+And you don’t want the partial to break when the local isn’t assigned, you can access it through the __local_assigns__ variable :
+
+{% highlight ruby %}
+- if local_assigns[:show_ad]
+  = render :partial => "ad"
+{% endhighlight %}
