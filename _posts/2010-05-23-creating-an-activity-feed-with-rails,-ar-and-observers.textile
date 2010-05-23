@@ -1,0 +1,108 @@
+---
+layout: post
+title: "Creating an activity feed with rails, AR and observers"
+---
+
+h1. {{ page.title }}
+
+p(meta). 23 May 2010
+
+I recently had to build an activity feed at "letitcast.com":http://letitcast.com.
+It’s a common thing to do, but I thought I might mention how I did it, and see if anyone else has suggestions/improvements.
+
+We wanted to display to our actors new parts that correspond to their profile, new feedbacks and views of their auditions , recent comments ...
+
+So, I first created a model "activity", here's the migration :
+
+{% highlight ruby %}
+  class CreateActivities < ActiveRecord::Migration
+    def self.up
+      create_table :activities do |t|
+        t.integer :user_id, :null => false
+        t.integer :activity_type, :null => false
+        t.integer :target_id, :null => false
+        t.string  :target_type, :null => false
+        t.timestamps
+      end
+
+       add_index :activities, [:target_id, :target_type]
+       add_index :activities, :user_id
+
+    end
+
+    def self.down
+      drop_table :activities
+    end
+  end
+{% endhighlight %}
+ 
+As you can see it's a polymorphic model, so the activity can be related to any active record model. 
+
+Here's the model :
+
+{% highlight ruby %}
+  class Activity < ActiveRecord::Base
+    belongs_to :user
+    belongs_to :target, :polymorphic => true
+  
+    default_scope :order => 'activities.created_at DESC', :limit => 10
+  
+    AUDITION_POSTED           = 1 #target --> model audition
+    AUDITION_FEEDBACK_UPDATED = 2 #target --> model audition
+    AUDITION_VIEWED           = 3 #target --> model video
+    NEW_PART                  = 4 #target --> model part
+  
+    class << self
+      def add(user, activity_type, target)
+        return false if user.blank? or activity_type.blank? or target.blank?
+        activity = Activity.new(:user => user, :activity_type => activity_type, :target => target)
+        activity.save!
+      end
+    end
+  
+  end
+{% endhighlight %}
+
+At the beginning the activity types were mapped in an other database but it was a bit overkill and was reducing the performance a lot so I just added them into the model (AUDITION_POSTED, AUDITION_FEEDBACK_UPDATED, ...)
+
+I decided to create the activities via observers, example :
+
+{% highlight ruby %}
+  class AuditionObserver < ActiveRecord::Observer
+
+    # ACTIVITY OBSERVER : new audition posted
+    def after_create(audition)
+      if audition.actor
+        Activity.add(audition.actor.user, Activity::AUDITION_POSTED, audition)
+      end
+    end
+
+  end
+{% endhighlight %}
+
+So now, I can add any event via a simple variable in the activity model and an observer.
+
+It was working really well but there were some performance issues with some events that required a lot of inserts in the activity model. 
+I first decided to execute this observer in a delayed job but after some research I ended up with a fast way to insert a batch of activities, here's the method :
+
+{% highlight ruby %}
+ def batch_add(users, activity_type, target)
+    return false if users.blank? or activity_type.blank? or target.blank?
+    inserts = []
+    users.each {|user| inserts.push "('#{user.id}', '#{activity_type}', '#{target.id}', '#{target.class}', UTC_TIMESTAMP())" }
+
+    sql = "INSERT INTO activities (`user_id`, `activity_type`, `target_id`, `target_type`, `created_at`) VALUES #{inserts.join(", ")}"
+    ActiveRecord::Base.connection.execute sql
+  end
+{% endhighlight %}
+
+To retrieve the activities :
+
+{% highlight ruby %}
+  @user.activities
+{% endhighlight %}
+
+By default you'll get 10 activities order by most recents. 
+If you want to change this behavior, just change the __default_scope__.
+
+We're also in the process of grouping the user activities to display them in a nice view, so there will maybe be a part II :-)
