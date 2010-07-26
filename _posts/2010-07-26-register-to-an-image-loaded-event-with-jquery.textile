@@ -1,0 +1,18 @@
+---
+layout: post
+title: "Register to an image loaded event with jQuery"
+---
+
+h1. {{ page.title }}
+
+p(meta). 26 July 2010
+
+I recently was working on a lightbox where I needed to display a remote image and recenter the lighbox once the image is loaded.
+This may seems pretty simple but it took me some time to discover that jQuery does the job via the __load__ method. 
+As soon as the image has been loaded, the handler is called.
+
+{% highlight javascript %}
+  $("#image_id").load(function(){
+    // stuff to do after the image is loaded
+  });
+{% endhighlight %}
