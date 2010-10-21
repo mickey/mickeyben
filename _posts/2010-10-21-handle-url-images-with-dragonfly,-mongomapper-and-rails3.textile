@@ -1,0 +1,113 @@
+---
+layout: post
+title: "Handle images from url with Dragonfly, MongoMapper and Rails3"
+---
+
+h1. {{ page.title }}
+
+p(meta). 21 October 2010
+
+First, let me give you a bit of context.
+"Dragonfly":http://github.com/markevans/dragonfly/ is a "Rack":http://rack.rubyforge.org/ framework for on-the-fly image handling in Ruby.
+"MongoMapper":http://github.com/jnunemaker/mongomapper is A Ruby Object Mapper for Mongo.
+
+They're both great pieces of software and I totally recommend them.
+
+My first problem was that I wanted to use Dragonfly to handle my image processing with MongoMapper but I couldn't find any running examples either in the doc or on the web. 
+
+One of the great point of Dragonfly is in his extensibility. You can use any ActiveModel-compatible library (like "Mongoid":http://github.com/mongoid/mongoid or MongoMapper), implement your own data store, write your own processors, ...
+There was already an example of Mongoid usage in the Dragonfly "documentation":http://markevans.github.com/dragonfly/file.Mongo.html so I just adapted it for MongoMapper.
+
+In your Gemfile:
+
+{% highlight ruby %}
+  gem 'dragonfly'
+  gem 'rmagick', :require => 'RMagick'
+  gem 'rack-cache', :require => 'rack/cache'
+{% endhighlight %}
+
+In config/initializers/dragonfly.rb:
+
+{% highlight ruby %}
+  require 'dragonfly'
+
+  app = Dragonfly[:images]
+  app.configure_with(:rmagick)
+  app.configure_with(:rails)
+
+  app.define_macro_on_include(MongoMapper::Document, :image_accessor)
+  app.define_macro_on_include(MongoMapper::EmbeddedDocument, :image_accessor)
+{% endhighlight %}
+
+Then in application.rb :
+
+{% highlight ruby %}
+  config.middleware.insert_after 'Rack::Lock', 'Dragonfly::Middleware', :images, '/media'
+  config.middleware.insert_before 'Dragonfly::Middleware', 'Rack::Cache', {
+    :verbose     => true,
+    :metastore   => "file:#{Rails.root}/tmp/dragonfly/cache/meta",
+    :entitystore => "file:#{Rails.root}/tmp/dragonfly/cache/body"
+  }
+
+  config.middleware.insert_after 'Rack::Lock', 'Dragonfly::Middleware', :images, '/media'
+  config.middleware.insert_before 'Dragonfly::Middleware', 'Rack::Cache', {
+    :verbose     => true,
+    :metastore   => "file:#{Rails.root}/tmp/dragonfly/cache/meta",
+    :entitystore => "file:#{Rails.root}/tmp/dragonfly/cache/body"
+  }
+{% endhighlight %}
+
+in your routes:
+
+{% highlight ruby %}
+  match '/media(/:dragonfly)', :to => Dragonfly[:images]
+{% endhighlight %}
+
+And Finally in your model(s):
+
+{% highlight ruby %}
+  key :image_uid, String
+  image_accessor :image
+{% endhighlight %}
+
+You're now able to create upload forms as seen in the Dragonfly "README":http://github.com/markevans/dragonfly/blob/master/README.md
+
+Now, what if you need to process an image not from a form but from an URL ?
+
+For this need I created this simple Class below that inherits from TempFile and put it in my lib/ directory :
+
+{% highlight ruby %}
+  class URLTempfile < Tempfile
+  
+    def initialize(url, tmpdir = Dir.tmpdir, options)
+      @url = URI.parse(url)
+
+      begin
+        super('url', tmpdir, options)
+
+        Net::HTTP.start(@url.host) do |http|
+          resp = http.get(@url.path)
+          self.write resp.body
+        end
+      ensure
+      end
+    end
+  
+  end
+{% endhighlight %}
+
+Once you have that, you just need to pass this to your model creation :
+
+{% highlight ruby %}
+  image_fd = URLTempfile.new(your_url, Dir.tmpdir, :encoding => 'ascii-8bit')
+
+  Company.create({
+    …,
+    :image => image_fd
+  })
+{% endhighlight %}
+
+And you're done !
+Hope it can helps
+
+ps : As you see I had to give TempFile an encoding option, it seems related to my recent migration to ruby 1.9.2 (and causes me some headache !)
